@@ -1,0 +1,26 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      command:
+        description: "The build command to run"
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node (optional)
+        if: ${{ contains(inputs.command, 'npm') || contains(inputs.command, 'npx') }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run build command
+        run: ${{ inputs.command }}
