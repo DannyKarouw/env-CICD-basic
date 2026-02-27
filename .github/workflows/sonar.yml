@@ -1,0 +1,49 @@
+name: SonarCloud Analysis
+
+on:
+  workflow_call:
+    inputs:
+      projectKey:
+        description: "SonarCloud project key (e.g. org:repo)"
+        required: true
+        type: string
+      projectName:
+        description: "Human-readable project name"
+        required: true
+        type: string
+      organization:
+        description: "SonarCloud organization key"
+        required: true
+        type: string
+      extraArgs:
+        description: "Optional extra scanner arguments"
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node (optional)
+        if: ${{ contains(inputs.projectKey, 'ts') || contains(inputs.projectKey, 'js') }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=${{ inputs.projectKey }}
+            -Dsonar.projectName="${{ inputs.projectName }}"
+            -Dsonar.organization=${{ inputs.organization }}
+            ${{ inputs.extraArgs }}
