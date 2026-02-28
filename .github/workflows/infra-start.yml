@@ -1,0 +1,31 @@
+name: Start Infra
+
+on:
+  workflow_call:
+
+jobs:
+  start-infra:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Start Kafka & Postgres
+        run: docker compose -f infra/docker-compose.yml up -d
+
+      - name: Wait for Postgres
+        run: |
+          echo "Waiting for Postgres..."
+          for i in {1..20}; do
+            if docker exec $(docker ps -qf "name=postgres") pg_isready -U test; then
+              echo "Postgres is ready!"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "Postgres failed to start"
+          exit 1
+
+      - name: Wait for Kafka
+        run: sleep 15

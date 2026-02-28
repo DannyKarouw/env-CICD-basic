@@ -1,0 +1,15 @@
+name: Stop Infra
+
+on:
+  workflow_call:
+
+jobs:
+  stop-infra:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Stop Kafka & Postgres
+        run: docker compose -f infra/docker-compose.yml down -v
