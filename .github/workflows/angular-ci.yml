@@ -11,7 +11,7 @@ jobs:
       - name: Checkout fox repository
         uses: actions/checkout@v4
         with:
-          repository: DannyKarouw/fox
+          repository: DannyKarouw/fox-security
           ref: develop
 
       - name: Use Node.js
