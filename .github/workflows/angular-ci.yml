@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout fox repository
+      - name: Checkout fox-security repository
         uses: actions/checkout@v4
         with:
           repository: DannyKarouw/fox-security
