@@ -8,11 +8,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout env-cicd-basic (this repo)
+        uses: actions/checkout@v4
+
       - name: Checkout fox-security repository
         uses: actions/checkout@v4
         with:
           repository: DannyKarouw/fox-security
           ref: develop
+          path: fox-security
 
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -21,13 +25,17 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
+        working-directory: fox-security
         run: npm ci
 
       - name: Lint code
+        working-directory: fox-security
         run: npm run lint
 
       - name: Run unit tests
+        working-directory: fox-security
         run: npm run test
 
       - name: Build Angular app
+        working-directory: fox-security
         run: npm run build
